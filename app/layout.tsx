@@ -1,9 +1,12 @@
 import './globals.css';
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Noto_Serif_Sinhala } from 'next/font/google';
 import { Toaster } from "@/components/ui/toaster"
 
-const inter = Inter({ subsets: ['latin'] });
+const noto_sinhala = Noto_Serif_Sinhala({
+  subsets: ['sinhala'],
+  weight: '400'
+});
 
 export const metadata: Metadata = {
   title: 'Small Business Expense Manager',
@@ -17,7 +20,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={noto_sinhala.className}>
         {children}
         <Toaster />
       </body>

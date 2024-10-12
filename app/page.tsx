@@ -24,6 +24,14 @@ export default function Home() {
     loadExpenses();
   }, []);
 
+  const categoryMap = {
+    office: 'කාර්යාල',
+    travel: 'ප්‍රවාහන',
+    meals: 'ආහාර',
+    utilities: 'බිල්පත්',
+    other: 'වෙනත්',
+  };
+
   async function loadExpenses() {
     const loadedExpenses = await getExpenses();
     setExpenses(loadedExpenses);
@@ -34,8 +42,8 @@ export default function Home() {
     try {
       await addExpense(newExpense);
       toast({
-        title: "Expense added",
-        description: "Your expense has been successfully added.",
+        title: "වැය වියදම ඇතුලත් කෙරිණි.",
+        description: "සාර්ථකව ඇතුලත් කරන ලදි",
       });
       setNewExpense({
         date: new Date().toISOString().split('T')[0],
@@ -57,8 +65,8 @@ export default function Home() {
     try {
       await deleteExpense(id);
       toast({
-        title: "Expense deleted",
-        description: "The expense has been successfully deleted.",
+        title: "වැය වියදම ඉවත් කෙරිණි.",
+        description: "සාර්ථකව ඉවත් කරන ලදි",
       });
       loadExpenses();
     } catch (error) {
@@ -72,17 +80,17 @@ export default function Home() {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6">Small Business Expense Manager</h1>
+      <h1 className="text-3xl font-bold mb-6">දෛනික අය වැය</h1>
       
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle>Add New Expense</CardTitle>
+          <CardTitle>වැය විස්තර</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleAddExpense} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="date">Date</Label>
+                <Label htmlFor="date">දිනය</Label>
                 <Input
                   id="date"
                   type="date"
@@ -92,7 +100,7 @@ export default function Home() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="amount">Amount</Label>
+                <Label htmlFor="amount">මුදල</Label>
                 <Input
                   id="amount"
                   type="number"
@@ -103,7 +111,7 @@ export default function Home() {
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="description">Description</Label>
+              <Label htmlFor="description">විස්තර</Label>
               <Input
                 id="description"
                 value={newExpense.description}
@@ -112,40 +120,40 @@ export default function Home() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="category">Category</Label>
+              <Label htmlFor="category">වර්ගය</Label>
               <Select
                 value={newExpense.category}
                 onValueChange={(value) => setNewExpense({ ...newExpense, category: value })}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select a category" />
+                  <SelectValue placeholder="වර්ගය තෝරන්න" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="office">Office Supplies</SelectItem>
-                  <SelectItem value="travel">Travel</SelectItem>
-                  <SelectItem value="meals">Meals & Entertainment</SelectItem>
-                  <SelectItem value="utilities">Utilities</SelectItem>
-                  <SelectItem value="other">Other</SelectItem>
+                  <SelectItem value="office">කාර්යාල</SelectItem>
+                  <SelectItem value="travel">ප්‍රවාහන</SelectItem>
+                  <SelectItem value="meals">ආහාර</SelectItem>
+                  <SelectItem value="utilities">බිල්පත්</SelectItem>
+                  <SelectItem value="other">වෙනත්</SelectItem>
                 </SelectContent>
               </Select>
             </div>
-            <Button type="submit">Add Expense</Button>
+            <Button type="submit">ඇතුලත් කරන්න</Button>
           </form>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle>Expense List</CardTitle>
+          <CardTitle>වියදම් වාර්තාව</CardTitle>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Date</TableHead>
-                <TableHead>Description</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead className="text-right">Amount</TableHead>
+                <TableHead>දිනය</TableHead>
+                <TableHead>විස්තරය</TableHead>
+                <TableHead>වර්ගය</TableHead>
+                <TableHead className="text-right">මුදල</TableHead>
                 <TableHead></TableHead>
               </TableRow>
             </TableHeader>
@@ -154,15 +162,15 @@ export default function Home() {
                 <TableRow key={expense.id}>
                   <TableCell>{new Date(expense.date).toLocaleDateString()}</TableCell>
                   <TableCell>{expense.description}</TableCell>
-                  <TableCell>{expense.category}</TableCell>
-                  <TableCell className="text-right">${expense.amount.toFixed(2)}</TableCell>
+                  <TableCell>{categoryMap[expense.category as keyof typeof categoryMap]}</TableCell>
+                  <TableCell className="text-right">රු.{expense.amount.toFixed(2)}</TableCell>
                   <TableCell>
                     <Button
                       variant="destructive"
                       size="sm"
                       onClick={() => expense.id && handleDeleteExpense(expense.id)}
                     >
-                      Delete
+                      මකා දමන්න
                     </Button>
                   </TableCell>
                 </TableRow>
