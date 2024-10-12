@@ -1,6 +1,6 @@
 import { openDB, DBSchema, IDBPDatabase } from 'idb';
 
-interface Expense {
+export interface Expense {
   id?: number;
   date: string;
   description: string;
